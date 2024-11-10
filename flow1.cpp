@@ -28,7 +28,7 @@ void HeatFlow::tick()
         auto prev_section = sources_and_sinks.find(current_section - 1); 
 
         
-        if (sources_and_sinks[current_section] != 100.0 && sources_and_sinks[current_section] != 0.0) 
+        if (sources_and_sinks[current_section] != 100.0) 
         {
             if (next_section != sources_and_sinks.end() && prev_section != sources_and_sinks.end())
             {
