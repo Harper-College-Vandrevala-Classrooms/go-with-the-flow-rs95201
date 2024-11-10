@@ -26,10 +26,23 @@ void HeatFlow::tick()
       auto next_section = sources_and_sinks.find(current_section + 1);//holds an iteraror
       auto prev_section = sources_and_sinks.find(current_section - 1);//holds an iteraror
       
-      if (next_section != sources_and_sinks.end() && prev_section != sources_and_sinks.end())
+      if (current_section == 0) 
       {
-        new_sources_and_sinks[current_section] = it->second + K * (next_section->second - 2 * it->second + prev_section->second);
-      }
+            if (next_section != sources_and_sinks.end()) {
+                new_sources_and_sinks[current_section] = it->second + K * (next_section->second - it->second);
+            }
+        }
+        else if (current_section == num_of_sections - 1) 
+        {
+            
+            if (prev_section != sources_and_sinks.end()) {
+                new_sources_and_sinks[current_section] = it->second + K * (prev_section->second - it->second);
+            }
+        }
+        else if (next_section != sources_and_sinks.end() && prev_section != sources_and_sinks.end()) 
+        {
+            new_sources_and_sinks[current_section] = it->second + K * (next_section->second - 2 * it->second + prev_section->second);
+        }
    }
    sources_and_sinks = new_sources_and_sinks;
 }
@@ -54,15 +67,19 @@ void HeatFlow::pretty_print()
 int main()
 {
 std::map<int, float> sources_and_sinks;
-sources_and_sinks[0] = 100.0;
+
 double ini_temp = 10;
 int num_of_sections = 5;
 
 double K = 0.1;
-for (int i = 1; i < num_of_sections; ++i) 
-{
-        sources_and_sinks[i] = ini_temp;
-}
+sources_and_sinks[2] = 100.0;
+for (int i = 0; i < num_of_sections; ++i) 
+    {
+        if (sources_and_sinks.find(i) == sources_and_sinks.end()) 
+        {  
+            sources_and_sinks[i] = ini_temp;
+        }
+    }
 HeatFlow h(ini_temp, num_of_sections, K, sources_and_sinks);
 h.pretty_print();
 h.tick();
